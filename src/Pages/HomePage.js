@@ -1,7 +1,6 @@
 import NavbarComp from "../Components/NavbarComp";
 import "../App.css";
-import { Helmet } from "react-helmet";
-import { Observer } from "../Observers/observer.js";
+import React from "react";
 
 /* 
 1. detect scroll up/down
@@ -11,26 +10,32 @@ import { Observer } from "../Observers/observer.js";
 
 */
 function HomePage() {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in-view");
-        } else {
-          entry.target.classList.remove("in-view");
-        }
-      });
-    },
-    {
-      rootMargin: "0px",
-      threshold: [0, 0.1, 1],
-    }
-  );
+  console.log("begin");
 
-  const tags = document.querySelectorAll("p");
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            console.log("added");
+          } else {
+            entry.target.classList.remove("in-view");
+            console.log("removed");
+          }
+        });
+      },
+      {
+        rootMargin: "0px",
+        threshold: [0, 0.1, 1],
+      }
+    );
 
-  tags.forEach((tag) => {
-    observer.observe(tag);
+    const tags = document.querySelectorAll("p");
+
+    tags.forEach((tag) => {
+      observer.observe(tag);
+    });
   });
 
   return (
