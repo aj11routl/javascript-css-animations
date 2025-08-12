@@ -1,6 +1,8 @@
 import NavbarComp from "../Components/NavbarComp";
 import "../App.css";
-import React from "react";
+import React, { useState } from "react";
+import "animate.css";
+import { Link } from "react-router-dom";
 
 /* 
 1. detect scroll up/down
@@ -9,41 +11,64 @@ import React from "react";
 3. on scroll down, have nav be scrolled out of view (instead of immediately disappearing) 
 
 */
-function HomePage() {
-  console.log("begin");
+function Page2() {
+  const [navbarFixed, setNavbarFixed] = useState(false);
 
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            console.log("added");
-          } else {
-            entry.target.classList.remove("in-view");
-            console.log("removed");
-          }
-        });
-      },
-      {
-        rootMargin: "0px",
-        threshold: [0, 0.1, 1],
-      }
-    );
+  let oldLastKnownScrollY = 0;
+  let newLastKnownScrollY = 0;
+  let ticking = false;
 
-    const tags = document.querySelectorAll("p");
+  //check for scroll
+  document.addEventListener("scroll", (event) => {
+    console.log(window.scrollY);
+    newLastKnownScrollY = window.scrollY;
 
-    tags.forEach((tag) => {
-      observer.observe(tag);
-    });
+    if (!ticking && newLastKnownScrollY < oldLastKnownScrollY) {
+      //only run this code if scrolling up
+      window.requestAnimationFrame(() => {
+        onScrollUp();
+        ticking = false;
+      });
+
+      ticking = true;
+    } else {
+      onScrollDown();
+    }
+
+    oldLastKnownScrollY = newLastKnownScrollY;
   });
+
+  function onScrollUp() {
+    console.log("going up");
+    setNavbarFixed(true);
+  }
+
+  function onScrollDown() {
+    console.log("going down");
+    setNavbarFixed(false);
+  }
+
+  function clickHappen() {
+    console.log("click");
+    setNavbarFixed(!navbarFixed);
+  }
 
   return (
     <div>
       <div className="header">
         <NavbarComp />
+        {navbarFixed === true && (
+          <div className={navbarFixed ? "navbar-still" : ""} id="navbar">
+            NAVBAR!
+          </div>
+        )}
+        PAGE 2
       </div>
       <div className="content">
+        <button onClick={clickHappen}>Toggle sticky</button>
+        <Link to="/">
+          <button className="my-button">Go to page 1</button>
+        </Link>
         <p>
           Lorem ipsum 11111 dolor sit amet consectetur adipiscing elit. Quisque
           faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi
@@ -77,14 +102,12 @@ function HomePage() {
           hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent
           per conubia nostra inceptos himenaeos.
         </p>
+        <button onClick={clickHappen}>Toggle sticky</button>
+
         <p>
-          Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque
-          faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi
-          pretium tellus duis convallis. Tempus leo eu aenean sed diam urna
-          tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas.
-          Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut
-          hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent
-          per conubia nostra inceptos himenaeos. Tempus leo eu aenean sed diam
+          Lorem ipsum 22222222222 dolor sit amet consectetur adipiscing elit.
+          Quisque faucibus ex sapien vitae pellentesque sem placerat. In id
+          cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam
           urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum
           egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut
           hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent
@@ -99,17 +122,9 @@ function HomePage() {
           per conubia nostra inceptos himenaeos.
         </p>
         <p>
-          Lorem ipsum 55555 dolor sit amet consectetur adipiscing elit. Quisque
-          faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi
-          pretium tellus duis convallis. Tempus leo eu aenean sed diam urna
-          tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas.
-          Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut
-          hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent
-          per conubia nostra inceptos himenaeos. Tempus leo eu aenean sed diam
-          urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum
-          egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut
-          hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent
-          per conubia nostra inceptos himenaeos. Tempus leo eu aenean sed diam
+          Lorem ipsum 22222222222 dolor sit amet consectetur adipiscing elit.
+          Quisque faucibus ex sapien vitae pellentesque sem placerat. In id
+          cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam
           urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum
           egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut
           hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent
@@ -128,4 +143,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Page2;
