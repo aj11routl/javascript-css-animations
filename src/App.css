@@ -49,12 +49,11 @@ p.in-view {
   z-index: 11;
   position: fixed;
   top: 0;
-  animation: slideInDown 1s both;
+  animation: slideInDown 0.75s both;
 }
 
 @keyframes slideInDown {
   0% {
-    position: relative;
   }
   100% {
     position: fixed;
